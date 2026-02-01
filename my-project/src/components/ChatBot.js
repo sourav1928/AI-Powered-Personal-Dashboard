@@ -10,28 +10,27 @@ const ChatBot = () => {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const userText = input;
+
+    setMessages((prev) => [...prev, { sender: "user", text: userText }]);
     setInput("");
     setLoading(true);
 
     try {
       const response = await axios.post(
         "http://localhost:5000/chat",
-        { message: input }
+        { message: userText }
       );
 
-      const botMessage = {
-        sender: "bot",
-        text: response.data.reply,
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: response.data.reply },
+      ]);
     } catch (error) {
       console.error("Chat error:", error);
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Something went wrong." },
+        { sender: "bot", text: "kuch to galat hai daya" },
       ]);
     }
 
@@ -115,6 +114,7 @@ const ChatBot = () => {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Type a message..."
               style={{ flex: 1, border: "none", padding: "10px" }}
             />
