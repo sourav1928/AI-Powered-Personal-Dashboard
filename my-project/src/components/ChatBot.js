@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -18,7 +20,7 @@ const ChatBot = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/chat",
+        `${API_URL}/chat`,
         { message: userText }
       );
 
@@ -28,9 +30,13 @@ const ChatBot = () => {
       ]);
     } catch (error) {
       console.error("Chat error:", error);
+
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "kuch to galat hai daya" },
+        {
+          sender: "bot",
+          text: "kuch to galat hai daya 😅",
+        },
       ]);
     }
 
